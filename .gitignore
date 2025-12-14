@@ -47,3 +47,9 @@ htmlcov/
 # Logs
 *.log
 logs/
+
+# Documentation (local only)
+DESIGN.md
+CLAUDE.MD
+DIAGRAMS.md
+TASKS.md
