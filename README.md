@@ -11,7 +11,7 @@ smarttoy is an early-stage Python/FastAPI project for a planned research assista
 
 ## Planned work
 
-The intended workflow is to generate search queries, gather and evaluate sources, synthesize a cited report, and export it. The research route, agent loop, integrations, and exports are not implemented yet. See the [roadmap](ROADMAP.md) and [GitHub issues](https://github.com/ashwinjohn3/smarttoy/issues) for the work ahead.
+The intended workflow is to generate search queries, gather and evaluate sources, synthesize a cited report, and export it. The research route, agent loop, integrations, and exports are not implemented yet. See the [GitHub issues](https://github.com/ashwinjohn3/smarttoy/issues) for the work ahead.
 
 ## Setup
 
@@ -60,7 +60,6 @@ tests/test_models.py         Model tests
 agents/ and tools/           Package placeholders
 pyproject.toml               Project metadata and dependencies
 requirements.txt             Compiled runtime requirements
-ROADMAP.md                   Submission tasks and planned work
 ```
 
 ## License
