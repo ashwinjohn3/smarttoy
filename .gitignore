@@ -27,6 +27,7 @@ env/
 
 # Environment Variables
 .env
+credentials/google-service-account.json
 
 # IDE
 .vscode/

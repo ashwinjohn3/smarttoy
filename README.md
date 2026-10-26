@@ -1,158 +1,68 @@
-# smarttoy - Deep Research Agent
+# smarttoy
 
-An AI-powered deep research agent that autonomously searches the web, synthesizes information from multiple sources, and exports structured research reports.
+smarttoy is an early-stage Python/FastAPI project for a planned research assistant. The current service exposes a greeting endpoint. Research, web search, report generation, and export are planned work.
 
-## Overview
+## Current implementation
 
-smarttoy is a web service that conducts comprehensive research on any topic by:
-- Generating diverse, targeted search queries using LLM
-- Iteratively searching the web and extracting content
-- Evaluating source relevance and quality
-- Synthesizing findings into coherent, well-cited reports
-- Exporting results to Google Docs, Notion, or Markdown
+- `app/main.py` defines a FastAPI application with `GET /`.
+- `models/models.py` defines Pydantic request and response models for the planned research API. These models are not connected to API routes yet.
+- `clients/supabase_client.py` contains a minimal Supabase client wrapper. The greeting route does not use it.
+- `tests/test_models.py` tests the Pydantic models.
 
-## Architecture
+## Planned work
 
-The system follows a ReAct (Reasoning + Acting) pattern:
-
-1. **Query Generation**: LLM generates diverse search queries from the research question
-2. **Search & Extraction**: Executes searches and extracts clean content from web pages
-3. **Evaluation**: Scores each source for relevance and quality
-4. **Synthesis**: Combines sources into a comprehensive report with citations
-5. **Export**: Publishes the report to the chosen platform
-
-### Key Components
-
-- **API Layer** (`app/`): FastAPI endpoints for research requests
-- **Agent Core** (`agents/`): Research orchestration, query generation, evaluation, synthesis
-- **Tools** (`tools/`): Search API, content extraction, export integrations
-- **Utils** (`utils/`): Configuration, logging, helpers
+The intended workflow is to generate search queries, gather and evaluate sources, synthesize a cited report, and export it. The research route, agent loop, integrations, and exports are not implemented yet. See the [roadmap](ROADMAP.md) and [GitHub issues](https://github.com/ashwinjohn3/smarttoy/issues) for the work ahead.
 
 ## Setup
 
-### Prerequisites
-
-- Python 3.9+
-- API keys for:
-  - LLM provider (OpenAI/Anthropic)
-  - Search service (Tavily/SerpAPI/Brave)
-  - Export service (Google Docs/Notion)
-
-### Installation
+Python 3.11 or newer is required by `pyproject.toml`. No API keys are needed to run the current greeting endpoint.
 
 ```bash
-# Clone the repository
 git clone https://github.com/ashwinjohn3/smarttoy.git
 cd smarttoy
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment variables
-cp .env.example .env
-# Edit .env with your API keys
+python3.11 -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+python -m pip install -r requirements.txt
+python -m pip install uvicorn
+python -m uvicorn app.main:app --reload
 ```
 
-### Running the Service
+The service runs at `http://localhost:8000`, with interactive API documentation at `http://localhost:8000/docs`. `uvicorn` is installed separately because it is not listed in `requirements.txt`.
+
+### API example
 
 ```bash
-# Start the development server
-uvicorn app.main:app --reload
-
-# The API will be available at http://localhost:8000
-# API documentation at http://localhost:8000/docs
+curl http://localhost:8000/
 ```
-
-## API Usage
-
-### Conduct Research
-
-```bash
-curl -X POST http://localhost:8000/api/v1/research \
-  -H "Content-Type: application/json" \
-  -d '{
-    "question": "What are the latest developments in quantum computing?",
-    "max_iterations": 3,
-    "export_format": "google_docs"
-  }'
-```
-
-### Response Format
 
 ```json
-{
-  "question": "What are the latest developments in quantum computing?",
-  "report": "# Quantum Computing Developments\n\n## Executive Summary...",
-  "sources": [
-    {
-      "title": "IBM Unveils 433-Qubit Quantum Processor",
-      "url": "https://example.com/article",
-      "snippet": "IBM announced their new Osprey processor...",
-      "relevance_score": 0.95,
-      "retrieved_at": "2025-01-15T10:30:00Z"
-    }
-  ],
-  "iterations_used": 2,
-  "export_url": "https://docs.google.com/document/d/...",
-  "completed_at": "2025-01-15T10:35:00Z"
-}
+{"message":"Hello, I am SmartToy!"}
 ```
 
-## Development
+There is currently no `POST /api/v1/research` endpoint.
 
-### Project Structure
-
-```
-smarttoy/
-├── app/                    # API layer
-│   ├── __init__.py
-│   ├── main.py            # FastAPI application
-│   ├── models.py          # Pydantic models
-│   └── api/
-│       └── routes.py      # API endpoints
-├── agents/                 # Agent logic
-│   ├── __init__.py
-│   ├── research_agent.py  # Main ReAct loop
-│   ├── query_generator.py # Search query generation
-│   ├── evaluator.py       # Source relevance scoring
-│   ├── synthesizer.py     # Report generation
-│   └── state.py           # State management
-├── tools/                  # External integrations
-│   ├── __init__.py
-│   ├── search_tool.py     # Web search API
-│   ├── content_extractor.py # Web scraping
-│   ├── google_docs_exporter.py
-│   └── notion_exporter.py
-├── utils/                  # Utilities
-│   ├── __init__.py
-│   ├── config.py          # Configuration
-│   └── logging.py         # Structured logging
-├── tests/                  # Test suite
-└── requirements.txt
-```
-
-### Testing
+### Tests
 
 ```bash
-# Run all tests
-pytest tests/ -v
+python -m pip install pytest
+python -m pytest tests/ -v
+```
 
-# Run with coverage
-pytest tests/ -v --cov=app --cov=agents --cov=tools
+`pytest` is in the `pyproject.toml` development dependency group, but not in `requirements.txt`. There is no configured coverage plugin or unit/integration test marker selection.
 
-# Run specific test categories
-pytest tests/ -m unit
-pytest tests/ -m integration
+## Repository layout
+
+```text
+app/main.py                  FastAPI application and greeting route
+models/models.py             Research request and response models
+clients/supabase_client.py   Minimal Supabase client wrapper
+tests/test_models.py         Model tests
+agents/ and tools/           Package placeholders
+pyproject.toml               Project metadata and dependencies
+requirements.txt             Compiled runtime requirements
+ROADMAP.md                   Submission tasks and planned work
 ```
 
 ## License
 
-MIT
-
-## Contributing
-
-Issues and pull requests are welcome! Please see the project board for planned features and improvements.
+This project is licensed under the [MIT License](LICENSE).
